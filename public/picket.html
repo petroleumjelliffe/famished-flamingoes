@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head><title>Flamingo</title></head>
+<head>
+  <title>Picketing Congress</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
 <body>
-  <h1>🦩 Flamingo</h1>
-  <div>Funding: <span id="funding"></span></div>
-  <div>Shrimp: <span id="shrimp"></span></div>
-  <div>Energy: <span id="energy"></span></div>
+  <h1 id="title">📢 Picketing Congress</h1>
+  <div id="scoreboard-container"></div>
 
-  <button id="picket">Picket (+1 Funding)</button>
+  <button id="chant" class="btn">Chant for Funding (+10)</button>
 
   <script type="module">
-const team = new URLSearchParams(window.location.search).get('team') || 'red';
+    import { connect, sendEvent } from './js/client.js';
+    import { createScoreboard, updateScoreboard } from './js/scoreboard.js';
 
-connect((state) => {
-  const myTeam = state.teams[team];
-  funding.textContent = myTeam.funding;
-  shrimp.textContent = myTeam.shrimp;
-  energy.textContent = myTeam.energy;
-});
+    const team = new URLSearchParams(window.location.search).get('team') || 'green';
+    const title = document.getElementById('title');
+    const button = document.getElementById('chant');
 
+    title.classList.add(`team-${team}`);
+    button.classList.add(`btn-${team}`);
+    title.textContent = `📢 ${team.toUpperCase()} Picketing Congress`;
 
-    document.getElementById('picket').addEventListener('click', () => {
-      sendEvent('INCREMENT_FUNDING', { data, amount: 1 });
-      // sendEvent('INCREMENT_SHRIMP', { amount: 1 });
+    createScoreboard();
+
+    connect((state) => updateScoreboard(state));
+
+    button.addEventListener('click', () => {
+      sendEvent('INCREMENT_FUNDING', { team, amount: 10 });
     });
   </script>
 </body>

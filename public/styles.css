@@ -1,0 +1,41 @@
+body {
+  font-family: sans-serif;
+  background: #fefefe;
+  text-align: center;
+  padding: 1em;
+}
+
+h1 {
+  margin-bottom: 1em;
+}
+
+.scoreboard {
+  margin: 0 auto;
+  border-collapse: collapse;
+  margin-bottom: 1.5em;
+}
+
+th, td {
+  padding: 0.5em 1em;
+  border: 1px solid #ccc;
+}
+
+.team-red { color: #e63946; }
+.team-blue { color: #457b9d; }
+.team-green { color: #2a9d8f; }
+.team-yellow { color: #f4a261; }
+
+.btn {
+  padding: 1em 2em;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.btn-red { background: #e63946; }
+.btn-blue { background: #457b9d; }
+.btn-green { background: #2a9d8f; }
+.btn-yellow { background: #f4a261; }

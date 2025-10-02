@@ -12,15 +12,15 @@
   <script type="module">
     import { connect, sendEvent } from './js/client.js';
 
-    const funding = document.getElementById('funding');
-    const shrimp = document.getElementById('shrimp');
-    const energy = document.getElementById('energy');
+const team = new URLSearchParams(window.location.search).get('team') || 'red';
 
-    connect((state) => {
-      funding.textContent = state.funding;
-      shrimp.textContent = state.shrimp;
-      energy.textContent = state.flamingoEnergy;
-    });
+connect((state) => {
+  const myTeam = state.teams[team];
+  funding.textContent = myTeam.funding;
+  shrimp.textContent = myTeam.shrimp;
+  energy.textContent = myTeam.energy;
+});
+
 
     document.getElementById('eat').addEventListener('click', () => {
       sendEvent('INCREMENT_ENERGY', { amount: 1 });

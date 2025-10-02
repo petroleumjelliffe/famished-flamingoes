@@ -1,25 +1,23 @@
-export class GameState {
-  constructor() {
-    this.state = {
-      funding: 100,
-      shrimp: 50,
-      flamingoEnergy: 0
-    };
-  }
+ws.on("message", (msg) => {
+  try {
+    const { event, data } = JSON.parse(msg);
+    const { team, amount } = data;
 
-  getState() {
-    return this.state;
-  }
+    switch (event) {
+      case "INCREMENT_FUNDING":
+        state.updateFunding(team, amount);
+        break;
+      case "INCREMENT_SHRIMP":
+        state.updateShrimp(team, amount);
+        break;
+      case "INCREMENT_ENERGY":
+        state.updateEnergy(team, amount);
+        break;
+    }
 
-  updateFunding(delta) {
-    this.state.funding = Math.max(0, this.state.funding + delta);
-  }
+    broadcast("STATE_UPDATE", state.getState());
 
-  updateShrimp(delta) {
-    this.state.shrimp = Math.max(0, this.state.shrimp + delta);
+  } catch (e) {
+    console.error("Invalid message:", msg);
   }
-
-  updateEnergy(delta) {
-    this.state.flamingoEnergy = Math.min(100, Math.max(0, this.state.flamingoEnergy + delta));
-  }
-}
+});

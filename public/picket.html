@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><title>Flamingo</title></head>
+<body>
+  <h1>🦩 Flamingo</h1>
+  <div>Funding: <span id="funding"></span></div>
+  <div>Shrimp: <span id="shrimp"></span></div>
+  <div>Energy: <span id="energy"></span></div>
+
+  <button id="picket">Picket (+1 Funding)</button>
+
+  <script type="module">
+    import { connect, sendEvent } from './js/client.js';
+
+    const funding = document.getElementById('funding');
+    const shrimp = document.getElementById('shrimp');
+    const energy = document.getElementById('energy');
+
+    connect((state) => {
+      funding.textContent = state.funding;
+      shrimp.textContent = state.shrimp;
+      energy.textContent = state.flamingoEnergy;
+    });
+
+    document.getElementById('picket').addEventListener('click', () => {
+      sendEvent('INCREMENT_FUNDING', { amount: 1 });
+      // sendEvent('INCREMENT_SHRIMP', { amount: 1 });
+    });
+  </script>
+</body>
+</html>

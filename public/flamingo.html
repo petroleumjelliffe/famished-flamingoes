@@ -23,8 +23,8 @@ connect((state) => {
 
 
     document.getElementById('eat').addEventListener('click', () => {
-      sendEvent('INCREMENT_ENERGY', { amount: 1 });
-      sendEvent('INCREMENT_SHRIMP', { amount: -1 });
+      sendEvent('INCREMENT_ENERGY', { team,amount: 1 });
+      sendEvent('INCREMENT_SHRIMP', { team,amount: -1 });
     });
   </script>
 </body>

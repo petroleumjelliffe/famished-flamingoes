@@ -21,7 +21,7 @@ connect((state) => {
 
 
     document.getElementById('picket').addEventListener('click', () => {
-      sendEvent('INCREMENT_FUNDING', { amount: 1 });
+      sendEvent('INCREMENT_FUNDING', { data, amount: 1 });
       // sendEvent('INCREMENT_SHRIMP', { amount: 1 });
     });
   </script>

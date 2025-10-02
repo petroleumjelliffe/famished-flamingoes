@@ -23,8 +23,8 @@ connect((state) => {
 
 
     document.getElementById('drop').addEventListener('click', () => {
-      sendEvent('INCREMENT_FUNDING', { amount: -1 });
-      sendEvent('INCREMENT_SHRIMP', { amount: 1 });
+      sendEvent('INCREMENT_FUNDING', { data, amount: -1 });
+      sendEvent('INCREMENT_SHRIMP', { data, amount: 1 });
     });
   </script>
 </body>

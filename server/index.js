@@ -22,7 +22,8 @@ function broadcast(event, data) {
 }
 
 wss.on('connection', (ws) => {    
-  console.log('✅ Client connected');
+  const playerId = Math.random().toString(36).slice(2, 8);
+  console.log("✅ Player connected:", playerId);
 
   // Send initial state
   ws.send(JSON.stringify({ event: 'STATE_UPDATE', data: state.getState() }));
@@ -33,6 +34,22 @@ ws.on("message", (msg) => {
     const { team, amount } = data;
 
     switch (event) {
+      case "SELECT_ROLE":
+  // Step 1: free previous slot (always)
+  state.unassignRole(playerId);
+
+  // Step 2: try to assign new one
+  const assigned = state.assignRole(data.team, data.role, playerId);
+
+  // Step 3: always broadcast (so clears are seen)
+  broadcast("STATE_UPDATE", state.getState());
+
+  break;
+
+      case "START_GAME":
+          state.startGame();
+          broadcast("GAME_STARTED", state.getState());
+          break;
       case "INCREMENT_FUNDING":
         state.updateFunding(team, amount);
         break;
@@ -50,6 +67,10 @@ ws.on("message", (msg) => {
     console.error("Invalid message:", msg);
   }
 });
+  ws.on("close", () => {
+    state.unassignRole(playerId);
+    broadcast("STATE_UPDATE", state.getState());
+  });
 });
 
 

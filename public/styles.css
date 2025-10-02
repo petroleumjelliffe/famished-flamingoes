@@ -39,3 +39,25 @@ th, td {
 .btn-blue { background: #457b9d; }
 .btn-green { background: #2a9d8f; }
 .btn-yellow { background: #f4a261; }
+
+/* Add these in styles.css or inside <style> of index.html */
+
+.team-red-bg {
+  background: #e63946;
+  color: white;
+}
+
+.team-blue-bg {
+  background: #457b9d;
+  color: white;
+}
+
+.team-green-bg {
+  background: #2a9d8f;
+  color: white;
+}
+
+.team-yellow-bg {
+  background: #f4a261;
+  color: white;
+}

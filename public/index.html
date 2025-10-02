@@ -1,13 +1,104 @@
 <!DOCTYPE html>
 <html>
-<head><title>Famished Famished Flamingoes</title></head>
+<head>
+  <title>Famished Famished Flamingoes</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    table.lobby {
+      margin: 2em auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 1em;
+      border: 1px solid #ccc;
+      min-width: 100px;
+      cursor: pointer;
+      text-align: center;
+    }
+    td.taken {
+      color: white;
+      font-weight: bold;
+    }
+    .btn-start {
+      display: block;
+      margin: 2em auto;
+      font-size: 1.5em;
+      padding: 1em 2em;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
 <body>
-  <h1>🦩 Famished Famished Flamingoes</h1>
-  <p>Select your role:</p>
-  <ul>
-    <li><a href="flamingo.html">🦩 Flamingo</a></li>
-    <li><a href="shrimpdropper.html">✈️ Shrimp Dropper</a></li>
-    <li><a href="picketing.html">📢 Picketing Congress</a></li>
-  </ul>
+  <h1>🦩 Famished Famished Flamingoes Lobby</h1>
+
+  <table class="lobby">
+    <thead>
+      <tr>
+        <th>Team</th>
+        <th>Flamingo</th>
+        <th>Shrimp Dropper</th>
+        <th>Congress</th>
+      </tr>
+    </thead>
+    <tbody id="lobby-body"></tbody>
+  </table>
+
+  <button id="start-btn" class="btn-start">Start Game</button>
+
+  <script type="module">
+    import { connect, sendEvent } from './js/client.js';
+
+    const lobbyBody = document.getElementById('lobby-body');
+    const startBtn = document.getElementById('start-btn');
+
+    let currentTeam = null;
+    let currentRole = null;
+
+    connect((state) => {
+  const lobby = state.lobby;
+  lobbyBody.innerHTML = ''; // <-- this ensures a clean redraw
+
+  for (const [team, roles] of Object.entries(lobby)) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="team-${team}">${team.toUpperCase()}</td>
+      ${Object.entries(roles).map(([role, player]) => {
+        const taken = !!player;
+        const classes = taken ? `taken team-${team}-bg` : '';
+        return `<td data-team="${team}" data-role="${role}" class="${classes}">
+          ${taken ? '✔' : ''}
+        </td>`;
+      }).join('')}
+    `;
+    lobbyBody.appendChild(row);
+  }
+
+  // re-attach click handlers after rebuilding
+  lobbyBody.querySelectorAll('td[data-team]').forEach(cell => {
+    const team = cell.dataset.team;
+    const role = cell.dataset.role;
+    if (!cell.classList.contains('taken')) {
+      cell.onclick = () => sendEvent('SELECT_ROLE', { team, role });
+    }
+  });
+});
+
+    startBtn.addEventListener('click', () => {
+      sendEvent('START_GAME', {});
+    });
+
+    function redirectToGame(team, role) {
+      let page = '';
+      if (role === 'flamingo') page = 'flamingo.html';
+      if (role === 'dropper') page = 'shrimpdropper.html';
+      if (role === 'congress') page = 'picketing.html';
+
+      window.location.href = `${page}?team=${team}`;
+    }
+  </script>
 </body>
 </html>

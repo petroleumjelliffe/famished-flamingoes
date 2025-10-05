@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Shrimp Dropper</title>
+  <title>Picketing Congress</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1 id="title">✈️ Shrimp Dropper</h1>
+  <h1 id="title">📢 Picketing Congress</h1>
   <div id="scoreboard-container"></div>
 
-  <button id="drop" class="btn">Drop Box (+5 Shrimp)</button>
+  <button id="chant" class="btn">Chant for Funding (+10)</button>
 
   <script type="module">
     import { connect, sendEvent } from './js/client.js';
     import { createScoreboard, updateScoreboard } from './js/scoreboard.js';
 
-    const team = new URLSearchParams(window.location.search).get('team') || 'blue';
+    const team = new URLSearchParams(window.location.search).get('team') || 'green';
     const title = document.getElementById('title');
-    const button = document.getElementById('drop');
+    const button = document.getElementById('chant');
 
     title.classList.add(`team-${team}`);
     button.classList.add(`btn-${team}`);
-    title.textContent = `✈️ ${team.toUpperCase()} Shrimp Dropper`;
+    title.textContent = `📢 ${team.toUpperCase()} Picketing Congress`;
 
     createScoreboard();
 
     connect((state) => updateScoreboard(state));
 
     button.addEventListener('click', () => {
-      sendEvent('INCREMENT_SHRIMP', { team, amount: 5 });
-      sendEvent('INCREMENT_FUNDING', { team, amount: -2 });
+      sendEvent('INCREMENT_FUNDING', { team, amount: 10 });
     });
   </script>
 </body>

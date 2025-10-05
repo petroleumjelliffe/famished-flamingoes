@@ -58,13 +58,15 @@
     let currentTeam = null;
     let currentRole = null;
 
-    connect((state) => {
-  const lobby = state.lobby;
-  lobbyBody.innerHTML = ''; // <-- this ensures a clean redraw
+    let hasRedirected = false;
 
-  for (const [team, roles] of Object.entries(lobby)) {
-    const row = document.createElement('tr');
-    row.innerHTML = `
+    connect((state) => {
+      const lobby = state.lobby;
+      lobbyBody.innerHTML = ''; // <-- this ensures a clean redraw
+
+      for (const [team, roles] of Object.entries(lobby)) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
       <td class="team-${team}">${team.toUpperCase()}</td>
       ${Object.entries(roles).map(([role, player]) => {
         const taken = !!player;
@@ -74,18 +76,36 @@
         </td>`;
       }).join('')}
     `;
-    lobbyBody.appendChild(row);
-  }
+        lobbyBody.appendChild(row);
+      }
 
-  // re-attach click handlers after rebuilding
-  lobbyBody.querySelectorAll('td[data-team]').forEach(cell => {
-    const team = cell.dataset.team;
-    const role = cell.dataset.role;
-    if (!cell.classList.contains('taken')) {
-      cell.onclick = () => sendEvent('SELECT_ROLE', { team, role });
-    }
-  });
-});
+      // re-attach click handlers after rebuilding
+      lobbyBody.querySelectorAll('td[data-team]').forEach(cell => {
+        const team = cell.dataset.team;
+        const role = cell.dataset.role;
+        if (!cell.classList.contains('taken')) {
+          cell.onclick = () => {
+            currentTeam = team;
+            currentRole = role;
+            sendEvent('SELECT_ROLE', { team, role });
+          };
+        }
+      });
+
+      if (
+        state.gameStarted &&
+        !hasRedirected &&
+        currentTeam &&
+        currentRole
+      ) {
+        hasRedirected = true;
+        const teamToRedirect = currentTeam;
+        const roleToRedirect = currentRole;
+        currentTeam = null;
+        currentRole = null;
+        redirectToGame(teamToRedirect, roleToRedirect);
+      }
+    });
 
     startBtn.addEventListener('click', () => {
       sendEvent('START_GAME', {});
